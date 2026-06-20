@@ -114,7 +114,7 @@ export default function App() {
   }, []);
 
   /* ─── contract interactions ─── */
-  async function handleGetMessages() {
+  const handleGetMessages = useCallback(async () => {
     try {
       setError("");
       setLoading(true);
@@ -134,7 +134,13 @@ export default function App() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [wallet, animateMessages]);
+
+  useEffect(() => {
+    if (wallet) {
+      handleGetMessages();
+    }
+  }, [wallet, handleGetMessages]);
 
   async function handleAddMessage(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

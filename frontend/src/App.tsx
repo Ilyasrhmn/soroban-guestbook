@@ -340,88 +340,91 @@ export default function App() {
                 {loading ? "Loading…" : "Load Messages"}
               </button>
 
-              {/* ─── MESSAGES LIST ─── */}
-              {messages.length > 0 && (
-                <div ref={messagesRef}>
-                  <div className="messages-header">
-                    <div className="messages-label">
-                      <div className="messages-label__icon">
-                        <MessageSquare strokeWidth={2} />
+              {/* ─── DYNAMIC CONTENT AREA ─── */}
+              <div className="dynamic-content">
+                {/* ─── MESSAGES LIST ─── */}
+                {messages.length > 0 && (
+                  <div ref={messagesRef}>
+                    <div className="messages-header">
+                      <div className="messages-label">
+                        <div className="messages-label__icon">
+                          <MessageSquare strokeWidth={2} />
+                        </div>
+                        <span className="messages-label__text">Messages</span>
                       </div>
-                      <span className="messages-label__text">Messages</span>
+                      <span className="messages-badge">
+                        {messageCount !== null ? messageCount : messages.length}{" "}
+                        {(messageCount ?? messages.length) === 1
+                          ? "entry"
+                          : "entries"}
+                      </span>
                     </div>
-                    <span className="messages-badge">
-                      {messageCount !== null ? messageCount : messages.length}{" "}
-                      {(messageCount ?? messages.length) === 1
-                        ? "entry"
-                        : "entries"}
-                    </span>
+
+                    <ul className="messages-list">
+                      {messages.map((msg) => (
+                        <li key={String(msg.id)} className="msg">
+                          <div className="msg__top">
+                            <h3 className="msg__author">{msg.author}</h3>
+                            <span className="msg__id">
+                              <Hash size={11} />
+                              {String(msg.id).slice(0, 8)}
+                            </span>
+                          </div>
+                          <p className="msg__body">{msg.message}</p>
+                          <div className="msg__foot">
+                            <button
+                              type="button"
+                              className="btn--like"
+                              onClick={() => handleLikeMessage(msg.id)}
+                              disabled={likingId === msg.id}
+                              title="Like this message"
+                            >
+                              <Heart
+                                size={14}
+                                strokeWidth={2}
+                                className={
+                                  Number(msg.likes) > 0 ? "liked" : ""
+                                }
+                              />
+                              <span>{String(msg.likes)}</span>
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn--danger-sm"
+                              onClick={() => handleDeleteMessage(msg.id)}
+                            >
+                              <Trash2 size={13} />
+                              Remove
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
+                )}
 
-                  <ul className="messages-list">
-                    {messages.map((msg) => (
-                      <li key={String(msg.id)} className="msg">
-                        <div className="msg__top">
-                          <h3 className="msg__author">{msg.author}</h3>
-                          <span className="msg__id">
-                            <Hash size={11} />
-                            {String(msg.id).slice(0, 8)}
-                          </span>
-                        </div>
-                        <p className="msg__body">{msg.message}</p>
-                        <div className="msg__foot">
-                          <button
-                            type="button"
-                            className="btn--like"
-                            onClick={() => handleLikeMessage(msg.id)}
-                            disabled={likingId === msg.id}
-                            title="Like this message"
-                          >
-                            <Heart
-                              size={14}
-                              strokeWidth={2}
-                              className={
-                                Number(msg.likes) > 0 ? "liked" : ""
-                              }
-                            />
-                            <span>{String(msg.likes)}</span>
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn--danger-sm"
-                            onClick={() => handleDeleteMessage(msg.id)}
-                          >
-                            <Trash2 size={13} />
-                            Remove
-                          </button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* ─── EMPTY STATE ─── */}
-              {messages.length === 0 && !loading && (
-                <div className="empty">
-                  <div className="empty__icon">
-                    <Inbox strokeWidth={1.5} />
+                {/* ─── EMPTY STATE ─── */}
+                {messages.length === 0 && !loading && (
+                  <div className="empty">
+                    <div className="empty__icon">
+                      <Inbox strokeWidth={1.5} />
+                    </div>
+                    <p className="empty__title">No messages yet</p>
+                    <p className="empty__desc">
+                      Be the first to sign the guestbook or load existing entries.
+                    </p>
                   </div>
-                  <p className="empty__title">No messages yet</p>
-                  <p className="empty__desc">
-                    Be the first to sign the guestbook or load existing entries.
-                  </p>
-                </div>
-              )}
+                )}
 
-              {/* ─── LOADING ─── */}
-              {loading && (
-                <div className="dots" aria-label="Loading">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-              )}
+                {/* ─── LOADING ─── */}
+                {loading && (
+                  <div className="dots" aria-label="Loading">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                )}
+              </div>
             </>
           )}
 
